@@ -220,7 +220,6 @@ def main():
     sgLayerName = sys.argv[1]
     inputField = sys.argv[2]
     addCodes = sys.argv[3]
-    exportLyr = sys.argv[4]
 
     aprx = arcpy.mp.ArcGISProject('CURRENT')
     mapProject = aprx.listMaps(aprx.activeMap.name)[0]
@@ -293,9 +292,6 @@ def main():
             else:
                 cls.label = sgCodeDescriptions[label]
     sgLayer.setDefinition(lyrCim)
-    if exportLyr != "#":
-        arcpy.AddMessage("Exporting layer file")
-        arcpy.management.SaveToLayerFile(in_layer=sgLayer, out_layer=exportLyr)
     shutil.rmtree(scratch, ignore_errors=True)
     return
 
