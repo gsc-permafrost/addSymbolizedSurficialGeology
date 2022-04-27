@@ -223,7 +223,6 @@ def main():
 
     aprx = arcpy.mp.ArcGISProject('CURRENT')
     mapProject = aprx.listMaps(aprx.activeMap.name)[0]
-    sgLayer = mapProject.listLayers(sgLayerName)[0]
 
     stylePath = os.path.join(os.path.dirname(__file__), "GSC_SymbolStandard_v2-3-14.stylx")
     con = sqlite3.connect(stylePath)
@@ -239,13 +238,14 @@ def main():
 
     arcpy.AddMessage("Calculating field...")
     try:
-        arcpy.management.AddField(in_table=sgLayer, field_name=codeField, field_type="TEXT")
+        arcpy.management.AddField(in_table=sgLayerName, field_name=codeField, field_type="TEXT")
     except:
-        print("Field already exists.")
-    arcpy.management.CalculateField(in_table=sgLayer, field=codeField, expression=exp, expression_type="PYTHON",
+        arcpy.AddMessage("Field already exists.")
+    arcpy.management.CalculateField(in_table=sgLayerName, field=codeField, expression=exp, expression_type="PYTHON",
                                     code_block=code)
 
     arcpy.AddMessage("Applying symbology...")
+    sgLayer = mapProject.listLayers(sgLayerName)[0]
     sym = sgLayer.symbology
     sym.updateRenderer('UniqueValueRenderer')
     sym.renderer.fields = [codeField]
