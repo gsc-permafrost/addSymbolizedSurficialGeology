@@ -9,6 +9,9 @@ Created: 2021-06-01
 import os
 import sys
 import arcpy
+import arcpy.cim
+import arcpy.mp
+import arcpy.management
 import shutil
 import sqlite3
 import json
@@ -119,7 +122,8 @@ sgCodes = {"3.01.15.001": "Isn",
            "3.01.13.192": "R1",
            "3.01.13.187": "R2",
            "3.01.13.183": "R3",
-           "3.01.13.185": "R"}
+           "3.01.13.185": "R",
+           "2.01.01.008": "0"}
 
 sgCodeDescriptions = {"3.01.15.001": "Glacier Ice or Snowpack: snowpacks",
                       "3.01.15.002": "Glacier Ice or Snowpack: Glacier-icefield-icecap",
@@ -213,7 +217,8 @@ sgCodeDescriptions = {"3.01.15.001": "Glacier Ice or Snowpack: snowpacks",
                       "3.01.13.192": "Bedrock: sedimentary",
                       "3.01.13.187": "Bedrock: igneous",
                       "3.01.13.183": "Bedrock: metamorphic",
-                      "3.01.13.185": "Bedrock: undifferentiated"}
+                      "3.01.13.185": "Bedrock: undifferentiated",
+                      "2.01.01.008": "Unmapped Area"}
 
 
 def main():
@@ -266,6 +271,7 @@ def main():
                     newSymbol.color = element["color"]
                     newSymbolLayer.append(newSymbol)
                 elif element["type"] == "CIMCharacterMarker":
+                    arcpy.AddMessage(element)
                     newSymbol = arcpy.cim.CIMSymbols.CIMCharacterMarker()
                     newSymbol.enable = element["enable"]
                     newSymbol.anchorPointUnits = element["anchorPointUnits"]
